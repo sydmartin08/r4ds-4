@@ -1,18 +1,18 @@
----
-title: "Crypto Markets"
-author: Sydney Martin
-format: html
-execute:
-  echo: false
----
-
-```{r}
+#
+#
+#
+#
+#
+#
+#
+#
+#
 #| message: false
 library(tidyverse)
 library(arrow)
-```
-
-```{r}
+#
+#
+#
 #| cache: true
 crypto <- open_dataset("data/daily_prices.parquet") |>
   collect() |>
@@ -34,9 +34,9 @@ crypto <- open_dataset("data/daily_prices.parquet") |>
     by = "category_id"
   ) |>
   mutate(date = as.Date(date_raw))
-```
-
-```{r}
+#
+#
+#
 crypto |>
   group_by(date) |>
   summarise(total_market_cap_usd = sum(market_cap_usd, na.rm = TRUE), .groups = "drop") |>
@@ -49,9 +49,9 @@ crypto |>
     y = "Market cap (USD trillions)"
   ) +
   theme_minimal()
-```
-
-```{r}
+#
+#
+#
 crypto |>
   group_by(date, category_name) |>
   summarise(category_market_cap_usd = sum(market_cap_usd, na.rm = TRUE), .groups = "drop") |>
@@ -65,30 +65,16 @@ crypto |>
     category_name = fct_reorder(category_name, -category_market_cap_usd, .fun = median)
   ) |>
   ggplot(aes(x = date, y = share, fill = category_name)) +
-  geom_rect(
-    data = tibble(
-      xmin = as.Date(c("2022-05-07", "2022-11-08")),
-      xmax = as.Date(c("2022-05-12", "2022-11-11")),
-      ymin = -Inf,
-      ymax = Inf,
-      event = c("Luna/UST crash", "FTX collapse")
-    ),
-    aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax),
-    inherit.aes = FALSE,
-    fill = "grey80",
-    alpha = 0.25,
-    color = NA
-  ) +
   geom_area(position = "stack", alpha = 0.9, linewidth = 0.2) +
   scale_y_continuous(labels = scales::percent_format(scale = 100)) +
   scale_fill_brewer(palette = "Set2") +
   labs(
     title = "Crypto market-cap share by category",
-    subtitle = "Each stacked band shows the share of total crypto market cap contributed by one category on a given day. The shaded windows mark the Luna/UST crash and the FTX collapse.",
+    subtitle = "Each stacked band shows the share of total crypto market cap contributed by one category on a given day.",
     x = "Date",
     y = "Share of total market cap (%)",
     fill = "Category",
-    caption = "Source: aggregated daily market-cap data for the coin categories in this dataset. Event windows approximate the Luna/UST crash (May 7-12, 2022) and the FTX collapse (Nov 8-11, 2022)."
+    caption = "Source: aggregated daily market-cap data for the coin categories in this dataset."
   ) +
   theme_minimal(base_size = 12) +
   theme(
@@ -98,5 +84,8 @@ crypto |>
     plot.subtitle = element_text(size = 11),
     plot.caption = element_text(hjust = 0, size = 9, color = "grey40")
   )
-```
-
+#
+#
+#
+#
+#
